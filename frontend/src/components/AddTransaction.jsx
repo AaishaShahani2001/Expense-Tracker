@@ -91,7 +91,7 @@ export default function AddTransaction({ onAdd, editTx }) {
     if (formData.category !== "Income") {
       try {
         const res = await fetch(
-          "http://localhost:3000/api/expenses/totals"
+          "https://expense-tracker-backend-9lee.onrender.com/api/expenses/totals"
         );
         const totals = await res.json();
 
@@ -111,8 +111,8 @@ export default function AddTransaction({ onAdd, editTx }) {
     }
 
     const url = editTx
-      ? `http://localhost:3000/api/expenses/${editTx._id}`
-      : "http://localhost:3000/api/expenses";
+      ? `https://expense-tracker-backend-9lee.onrender.com/api/expenses/${editTx._id}`
+      : "https://expense-tracker-backend-9lee.onrender.com/api/expenses";
 
     const method = editTx ? "PUT" : "POST";
 

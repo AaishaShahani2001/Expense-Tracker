@@ -21,7 +21,7 @@ const COLORS = [
 
 export default function CategoryPieChart({ transactions }) {
   /* --------------------------------------------------
-     BUILD PIE DATA (MEMOIZED ✅)
+     BUILD PIE DATA (MEMOIZED )
   -------------------------------------------------- */
   const data = useMemo(() => {
     const categoryMap = {};

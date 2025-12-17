@@ -13,7 +13,7 @@ export default function RecentTransactions({ refreshKey, onGlobalRefresh }) {
   const fetchTransactions = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/expenses");
+      const res = await fetch("https://expense-tracker-backend-9lee.onrender.com/api/expenses");
       const data = await res.json();
       setTransactions(data.slice(0, 5));
     } catch (error) {
@@ -25,7 +25,7 @@ export default function RecentTransactions({ refreshKey, onGlobalRefresh }) {
 
   const confirmDelete = async () => {
     try {
-      await fetch(`http://localhost:3000/api/expenses/${deleteId}`, {
+      await fetch(`https://expense-tracker-backend-9lee.onrender.com/api/expenses/${deleteId}`, {
         method: "DELETE"
       });
       setDeleteId(null);

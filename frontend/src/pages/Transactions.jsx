@@ -8,7 +8,7 @@ export default function Transactions() {
 
   const fetchTransactions = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/expenses");
+      const res = await fetch("https://expense-tracker-backend-9lee.onrender.com/api/expenses");
       const data = await res.json();
       setTransactions(data);
     } catch (err) {
@@ -53,7 +53,7 @@ export default function Transactions() {
       {transactions.map(tx => {
         const isIncome = tx.category === "Income";
 
-        // ✅ USE FORM DATE
+        //  USE FORM DATE
         const displayDate = new Date(tx.date).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",

@@ -7,7 +7,7 @@ export default function SummaryCard({ refreshKey }) {
 
   const fetchTotals = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/expenses/totals");
+      const res = await fetch("https://expense-tracker-backend-9lee.onrender.com/api/expenses/totals");
       const data = await res.json();
 
       setIncome(data.income);

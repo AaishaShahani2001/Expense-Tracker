@@ -153,7 +153,7 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* 🆕 MONTH FILTER */}
+        {/* MONTH FILTER */}
         {period === "monthly" && (
           <div
             style={{
@@ -291,7 +291,7 @@ export default function Dashboard() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "56px", // 👈 MAIN SPACING BETWEEN CHARTS
+          gap: "56px", 
           marginTop: "40px",
           marginBottom: "40px"
         }}
