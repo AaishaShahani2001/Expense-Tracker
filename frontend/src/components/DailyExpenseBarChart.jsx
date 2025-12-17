@@ -9,6 +9,9 @@ import {
   ResponsiveContainer
 } from "recharts";
 
+/* -----------------------------------
+   CATEGORY COLORS
+----------------------------------- */
 const CATEGORY_COLORS = {
   Income: "#22c55e",
   Food: "#ef4444",
@@ -20,23 +23,30 @@ const CATEGORY_COLORS = {
   Other: "#64748b"
 };
 
+/* -----------------------------------
+   LOCAL DATE KEY (TIMEZONE SAFE)
+----------------------------------- */
+const getLocalDateKey = date =>
+  new Date(date).toLocaleDateString("en-CA"); // YYYY-MM-DD
+
 export default function DailyExpenseBarChart({ transactions }) {
   const [days, setDays] = useState(7);
   const [selectedDate, setSelectedDate] = useState(null);
 
-  /* --------------------------------------------------
-     BUILD CHART DATA 
-  -------------------------------------------------- */
+  const todayKey = getLocalDateKey(new Date());
+
+  /* -----------------------------------
+     BUILD CHART DATA
+  ----------------------------------- */
   const data = useMemo(() => {
     const map = {};
 
-    // Create last N days
+    // Create last N days INCLUDING TODAY (LOCAL)
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      d.setHours(0, 0, 0, 0);
 
-      const key = d.toISOString().split("T")[0];
+      const key = getLocalDateKey(d);
       map[key] = { date: key };
 
       Object.keys(CATEGORY_COLORS).forEach(cat => {
@@ -44,9 +54,9 @@ export default function DailyExpenseBarChart({ transactions }) {
       });
     }
 
-    // Group transactions by FORM DATE
+    // Group transactions by LOCAL date
     transactions.forEach(tx => {
-      const key = new Date(tx.date).toISOString().split("T")[0];
+      const key = getLocalDateKey(tx.date);
       if (map[key]) {
         map[key][tx.category] += tx.amount;
       }
@@ -55,26 +65,23 @@ export default function DailyExpenseBarChart({ transactions }) {
     return Object.values(map);
   }, [transactions, days]);
 
-  /* --------------------------------------------------
-     CLICK HANDLER (SAFE)
-  -------------------------------------------------- */
+  /* -----------------------------------
+     CLICK HANDLER
+  ----------------------------------- */
   const handleBarClick = state => {
     if (state?.activeLabel) {
       setSelectedDate(state.activeLabel);
     }
   };
 
-  /* --------------------------------------------------
-     TRANSACTIONS FOR SELECTED DAY (LIMITED)
-  -------------------------------------------------- */
+  /* -----------------------------------
+     SELECTED DAY TRANSACTIONS
+  ----------------------------------- */
   const selectedTransactions = useMemo(() => {
     if (!selectedDate) return [];
-    return transactions
-      .filter(
-        tx =>
-          new Date(tx.date).toISOString().split("T")[0] === selectedDate
-      )
-      .slice(0, 10); // limit for performance
+    return transactions.filter(
+      tx => getLocalDateKey(tx.date) === selectedDate
+    );
   }, [transactions, selectedDate]);
 
   return (
@@ -131,11 +138,30 @@ export default function DailyExpenseBarChart({ transactions }) {
                 dataKey={cat}
                 stackId="a"
                 fill={CATEGORY_COLORS[cat]}
-                isAnimationActive={false} 
+                isAnimationActive={false}
+                stroke={
+                  data.some(d => d.date === todayKey)
+                    ? "#000"
+                    : "none"
+                }
+                opacity={1}
               />
             ))}
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* TODAY LABEL */}
+      <div style={{ textAlign: "center", marginTop: 8 }}>
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#005ce6"
+          }}
+        >
+          ● Highlighted bar = Today
+        </span>
       </div>
 
       {/* CLICKED DAY TRANSACTIONS */}
